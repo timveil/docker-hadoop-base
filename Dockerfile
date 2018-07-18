@@ -1,4 +1,4 @@
-FROM openjdk:slim
+FROM openjdk:8-jdk-slim
 
 LABEL maintainer="tjveil@gmail.com"
 
