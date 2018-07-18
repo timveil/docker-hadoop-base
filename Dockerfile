@@ -13,7 +13,7 @@ ENV PATH $HADOOP_PREFIX/bin/:$PATH
 ADD entrypoint.sh /entrypoint.sh
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends perl curl \
+    && apt-get install -y --no-install-recommends perl curl netcat \
 	&& rm -rf /var/lib/apt/lists/* \
     && mkdir -p /opt \
     && curl -fSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
