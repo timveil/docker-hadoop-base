@@ -23,7 +23,7 @@ function configure() {
     
     echo "Configuring $module"
     for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=$envPrefix`; do 
-        name=`echo ${c} | perl -pe 's/___/-/g; s/__/@/g; s/_/./g; s/@/_/g;'`
+        name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g'`
         var="${envPrefix}_${c}"
         value=${!var}
         echo " - Setting $name=$value"
@@ -36,6 +36,7 @@ configure /etc/hadoop/hdfs-site.xml hdfs HDFS_CONF
 configure /etc/hadoop/yarn-site.xml yarn YARN_CONF
 configure /etc/hadoop/httpfs-site.xml httpfs HTTPFS_CONF
 configure /etc/hadoop/kms-site.xml kms KMS_CONF
+configure /etc/hadoop/mapred-site.xml mapred MAPRED_CONF
 
 if [ "$MULTIHOMED_NETWORK" = "1" ]; then
     echo "Configuring for multihomed network"
@@ -67,7 +68,7 @@ if [ -n "$GANGLIA_HOST" ]; then
         echo "$module.period=10"
         echo "$module.servers=$GANGLIA_HOST:8649"
     done > /etc/hadoop/hadoop-metrics.properties
-    
+
     for module in namenode datanode resourcemanager nodemanager mrappmaster jobhistoryserver; do
         echo "$module.sink.ganglia.class=org.apache.hadoop.metrics2.sink.ganglia.GangliaSink31"
         echo "$module.sink.ganglia.period=10"
@@ -77,5 +78,40 @@ if [ -n "$GANGLIA_HOST" ]; then
         echo "$module.sink.ganglia.servers=$GANGLIA_HOST:8649"
     done > /etc/hadoop/hadoop-metrics2.properties
 fi
+
+function wait_for_it()
+{
+    local serviceport=$1
+    local service=${serviceport%%:*}
+    local port=${serviceport#*:}
+    local retry_seconds=5
+    local max_try=100
+    let i=1
+
+    nc -z $service $port
+    result=$?
+
+    until [ $result -eq 0 ]; do
+      echo "[$i/$max_try] check for ${service}:${port}..."
+      echo "[$i/$max_try] ${service}:${port} is not available yet"
+      if (( $i == $max_try )); then
+        echo "[$i/$max_try] ${service}:${port} is still not available; giving up after ${max_try} tries. :/"
+        exit 1
+      fi
+
+      echo "[$i/$max_try] try in ${retry_seconds}s once again ..."
+      let "i++"
+      sleep $retry_seconds
+
+      nc -z $service $port
+      result=$?
+    done
+    echo "[$i/$max_try] $service:${port} is available."
+}
+
+for i in ${SERVICE_PRECONDITION[@]}
+do
+    wait_for_it ${i}
+done
 
 exec $@
