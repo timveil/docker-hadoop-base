@@ -2,9 +2,6 @@
 
 echo "docker base entrypoint"
 
-# Set some sensible defaults
-export CORE_CONF_fs_defaultFS=${CORE_CONF_fs_defaultFS:-hdfs://`hostname -f`:8020}
-
 function addProperty() {
   local path=$1
   local name=$2
