@@ -16,7 +16,6 @@ RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /et
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 
-
 RUN apt-get update \
     && apt-get install -y --no-install-recommends perl curl netcat \
     && rm -rf /var/lib/apt/lists/* \
