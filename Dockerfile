@@ -10,8 +10,12 @@ ENV MULTIHOMED_NETWORK=1
 ENV USER=root
 ENV PATH $HADOOP_PREFIX/bin/:$PATH
 
+ENV TIMEZONE=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone
+
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
+
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends perl curl netcat \
