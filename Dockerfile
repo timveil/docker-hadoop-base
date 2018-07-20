@@ -13,9 +13,6 @@ ENV PATH $HADOOP_PREFIX/bin/:$PATH
 ENV TIMEZONE=America/New_York
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone
 
-ADD entrypoint.sh /entrypoint.sh
-RUN chmod a+x /entrypoint.sh
-
 RUN apt-get update \
     && apt-get install -y --no-install-recommends perl curl netcat \
     && rm -rf /var/lib/apt/lists/* \
@@ -27,5 +24,13 @@ RUN apt-get update \
     && ln -s /opt/hadoop-$HADOOP_VERSION/etc/hadoop /etc/hadoop \
     && cp /etc/hadoop/mapred-site.xml.template /etc/hadoop/mapred-site.xml \
     && mkdir -p /opt/hadoop-$HADOOP_VERSION/logs
+
+# Custom configuration goes here
+ADD conf/httpfs-log4j.properties $HADOOP_CONF_DIR
+ADD conf/kms-log4j.properties $HADOOP_CONF_DIR
+ADD conf/log4j.properties $HADOOP_CONF_DIR
+
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
