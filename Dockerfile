@@ -19,10 +19,10 @@ RUN rm -rf /var/lib/apt/lists/* \
     && mkdir -p /opt \
     && curl -fSL "$HADOOP_DOWNLOAD_URL" -o /tmp/hadoop.tar.gz \
     && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
-    && rm /tmp/hadoop.tar.gz* \
+    && rm -rf /tmp/hadoop.tar.gz \
     && rm -rf $HADOOP_HOME/share/doc \
-    && ln -s $HADOOP_HOME/etc/hadoop /etc/hadoop \
-    && cp /etc/hadoop/mapred-site.xml.template /etc/hadoop/mapred-site.xml \
+    && ln -s $HADOOP_HOME/etc/hadoop $HADOOP_CONF_DIR \
+    && cp $HADOOP_CONF_DIR/mapred-site.xml.template $HADOOP_CONF_DIR/mapred-site.xml \
     && mkdir -p $HADOOP_HOME/logs
 
 # Custom configuration goes here
