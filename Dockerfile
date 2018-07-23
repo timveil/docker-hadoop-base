@@ -3,7 +3,7 @@ FROM openjdk:8-jdk-slim
 LABEL maintainer="tjveil@gmail.com"
 
 ENV HADOOP_VERSION 2.8.4
-ENV HADOOP_URL https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+ENV HADOOP_DOWNLOAD_URL https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 ENV HADOOP_HOME=/opt/hadoop
 ENV HADOOP_CONF_DIR=/etc/hadoop
 ENV MULTIHOMED_NETWORK=1
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends perl curl netca
 
 RUN rm -rf /var/lib/apt/lists/* \
     && mkdir -p /opt \
-    && curl -fSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
+    && curl -fSL "$HADOOP_DOWNLOAD_URL" -o /tmp/hadoop.tar.gz \
     && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
     && rm /tmp/hadoop.tar.gz* \
     && rm -rf $HADOOP_HOME/share/doc \
