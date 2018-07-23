@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "docker base entrypoint"
+echo "calling entrypoint.sh from docker-hadoop-base"
 
 function addProperty() {
   local path=$1
