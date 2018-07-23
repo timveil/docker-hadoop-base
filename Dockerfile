@@ -19,6 +19,7 @@ RUN rm -rf /var/lib/apt/lists/* \
     && mkdir -p /opt \
     && curl -fSL "$HADOOP_DOWNLOAD_URL" -o /tmp/hadoop.tar.gz \
     && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
+    && mv /opt/hadoop-$HADOOP_VERSION $HADOOP_HOME \
     && rm -rf /tmp/hadoop.tar.gz \
     && rm -rf $HADOOP_HOME/share/doc \
     && ln -s $HADOOP_HOME/etc/hadoop $HADOOP_CONF_DIR \
