@@ -20,9 +20,9 @@ RUN mkdir -pv $HADOOP_TMP_DIR \
     && curl -fSL "$HADOOP_DOWNLOAD_URL" -o /tmp/hadoop.tar.gz \
     && tar -xvf /tmp/hadoop.tar.gz -C $HADOOP_TMP_DIR --strip-components=1 \
     && mv -v $HADOOP_TMP_DIR /opt \
-    && rm -rf /tmp/hadoop.tar.gz \
-    && rm -rf $HADOOP_HOME/share/doc \
-    && cp $HADOOP_CONF_DIR/mapred-site.xml.template $HADOOP_CONF_DIR/mapred-site.xml
+    && rm -rfv /tmp/hadoop.tar.gz \
+    && rm -rfv $HADOOP_HOME/share/doc \
+    && cp -v $HADOOP_CONF_DIR/mapred-site.xml.template $HADOOP_CONF_DIR/mapred-site.xml
 
 # Custom configuration goes here
 ADD conf/httpfs-log4j.properties $HADOOP_CONF_DIR
