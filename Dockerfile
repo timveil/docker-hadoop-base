@@ -29,10 +29,6 @@ ADD conf/httpfs-log4j.properties $HADOOP_CONF_DIR
 ADD conf/kms-log4j.properties $HADOOP_CONF_DIR
 ADD conf/log4j.properties $HADOOP_CONF_DIR
 
-# create generic sidecar mount for monitoring
-RUN mkdir -p /opt/sidecar
-VOLUME /opt/sidecar
-
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 
