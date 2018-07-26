@@ -28,7 +28,9 @@ RUN mkdir -pv $HADOOP_TMP_DIR \
 ADD conf/httpfs-log4j.properties $HADOOP_CONF_DIR
 ADD conf/kms-log4j.properties $HADOOP_CONF_DIR
 ADD conf/log4j.properties $HADOOP_CONF_DIR
-ADD conf/log4j.properties $HADOOP_CONF_DIR/timelineserver-config
+ADD conf/log4j-timeline.properties $HADOOP_CONF_DIR/timelineserver-config/log4j.properties
+ADD conf/log4j-nodemanager.properties $HADOOP_CONF_DIR/nm-config/log4j.properties
+ADD conf/log4j-resourcemanager.properties $HADOOP_CONF_DIR/rm-config/log4j.properties
 ADD conf/logging.properties $JAVA_HOME/jre/lib
 
 ADD entrypoint.sh /entrypoint.sh

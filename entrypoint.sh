@@ -21,10 +21,12 @@ function configure() {
     local value
     
     echo "Configuring $module"
+
     for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=$envPrefix`; do 
         name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g'`
         var="${envPrefix}_${c}"
         value=${!var}
+        echo " - var is $var"
         echo " - Setting $name=$value"
         addProperty $path $name "$value"
     done
@@ -59,8 +61,8 @@ if [ "$MULTIHOMED_NETWORK" = "1" ]; then
     addProperty $HADOOP_CONF_DIR/mapred-site.xml yarn.nodemanager.bind-host 0.0.0.0
 fi
 
-function wait_for_it()
-{
+function wait_for_it() {
+
     local serviceport=$1
     local service=${serviceport%%:*}
     local port=${serviceport#*:}
@@ -86,6 +88,7 @@ function wait_for_it()
       nc -z $service $port
       result=$?
     done
+
     echo "[$i/$max_try] $service:${port} is available."
 }
 
