@@ -7,6 +7,7 @@ function addProperty() {
 
   local entry="<property><name>$name</name><value>${value}</value></property>"
   local escapedEntry=$(echo $entry | sed 's/\//\\\//g')
+
   sed -i "/<\/configuration>/ s/.*/${escapedEntry}\n&/" $path
 }
 
@@ -76,6 +77,7 @@ function waitForService() {
     until [ $result -eq 0 ]; do
 
       echo "[$i/$max_try] ${service}:${port} is not available yet"
+
       if (( $i == $max_try )); then
         echo "[$i/$max_try] ${service}:${port} is still not available; giving up after ${max_try} tries. :/"
         exit 1
