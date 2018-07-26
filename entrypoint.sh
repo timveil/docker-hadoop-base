@@ -61,12 +61,12 @@ if [ "$MULTIHOMED_NETWORK" = "1" ]; then
     addProperty $HADOOP_CONF_DIR/mapred-site.xml yarn.nodemanager.bind-host 0.0.0.0
 fi
 
-function wait_for_it() {
+function waitForService() {
 
-    local serviceport=$1
-    local service=${serviceport%%:*}
-    local port=${serviceport#*:}
-    local retry_seconds=5
+    local servicePort=$1
+    local service=${servicePort%%:*}
+    local port=${servicePort#*:}
+    local retrySeconds=5
     local max_try=100
     let i=1
 
@@ -74,16 +74,15 @@ function wait_for_it() {
     result=$?
 
     until [ $result -eq 0 ]; do
-      echo "[$i/$max_try] check for ${service}:${port}..."
+
       echo "[$i/$max_try] ${service}:${port} is not available yet"
       if (( $i == $max_try )); then
         echo "[$i/$max_try] ${service}:${port} is still not available; giving up after ${max_try} tries. :/"
         exit 1
       fi
 
-      echo "[$i/$max_try] try in ${retry_seconds}s once again ..."
       let "i++"
-      sleep $retry_seconds
+      sleep $retrySeconds
 
       nc -z $service $port
       result=$?
@@ -94,7 +93,7 @@ function wait_for_it() {
 
 for i in ${SERVICE_PRECONDITION[@]}
 do
-    wait_for_it ${i}
+    waitForService ${i}
 done
 
 exec $@
