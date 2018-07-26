@@ -28,9 +28,8 @@ RUN mkdir -pv $HADOOP_TMP_DIR \
 ADD conf/httpfs-log4j.properties $HADOOP_CONF_DIR
 ADD conf/kms-log4j.properties $HADOOP_CONF_DIR
 ADD conf/log4j.properties $HADOOP_CONF_DIR
-ADD conf/logging.properties $HADOOP_CONF_DIR
-
-ENV JAVA_USER_OPTS="-Djava.util.logging.config.file=$HADOOP_CONF_DIR/logging.properties"
+ADD conf/log4j.properties $HADOOP_CONF_DIR/timelineserver-config
+ADD conf/logging.properties $JAVA_HOME/jre/lib
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
