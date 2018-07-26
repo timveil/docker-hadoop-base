@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "calling entrypoint.sh from docker-hadoop-base"
-
 function addProperty() {
   local path=$1
   local name=$2
@@ -26,9 +24,11 @@ function configure() {
         name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g'`
         var="${envPrefix}_${c}"
         value=${!var}
-        echo " - var is $var"
+
         echo " - Setting $name=$value"
         addProperty $path $name "$value"
+
+        unset ${var}
     done
 }
 
@@ -41,7 +41,7 @@ configure $HADOOP_CONF_DIR/mapred-site.xml mapred MAPRED_CONF
 configure $HIVE_CONF_DIR/hive-site.xml hive HIVE_SITE_CONF
 
 if [ "$MULTIHOMED_NETWORK" = "1" ]; then
-    echo "Configuring for multihomed network"
+    echo "Configuring for multi-homed network"
 
     # HDFS
     addProperty $HADOOP_CONF_DIR/hdfs-site.xml dfs.namenode.rpc-bind-host 0.0.0.0
