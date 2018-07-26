@@ -2,16 +2,16 @@ FROM openjdk:8-jdk-slim
 
 LABEL maintainer="tjveil@gmail.com"
 
-ENV HADOOP_VERSION 2.8.4
-ENV HADOOP_DOWNLOAD_URL https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+ENV HADOOP_VERSION=2.8.4
+ENV HADOOP_DOWNLOAD_URL=https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 ENV HADOOP_HOME=/opt/hadoop
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 ENV HADOOP_TMP_DIR=/tmp/hadoop
 ENV MULTIHOMED_NETWORK=1
 ENV USER=root
 ENV PATH $HADOOP_HOME/bin/:$PATH
-
 ENV TIMEZONE=America/New_York
+
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone
 
 RUN apt-get update && apt-get install -y --no-install-recommends perl curl netcat apt-utils && rm -rf /var/lib/apt/lists/*
@@ -28,6 +28,9 @@ RUN mkdir -pv $HADOOP_TMP_DIR \
 ADD conf/httpfs-log4j.properties $HADOOP_CONF_DIR
 ADD conf/kms-log4j.properties $HADOOP_CONF_DIR
 ADD conf/log4j.properties $HADOOP_CONF_DIR
+ADD conf/logging.properties $HADOOP_CONF_DIR
+
+ENV JAVA_USER_OPTS="-Djava.util.logging.config.file=$HADOOP_CONF_DIR/logging.properties"
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
