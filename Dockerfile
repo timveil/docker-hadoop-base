@@ -6,7 +6,7 @@ ENV HADOOP_VERSION=2.8.4
 ENV HADOOP_DOWNLOAD_URL=https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 ENV HADOOP_HOME=/opt/hadoop
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
-ENV HADOOP_TMP_DIR=/tmp/hadoop
+ENV HADOOP_DOWNLOAD_DIR=/tmp/hadoop
 ENV MULTIHOMED_NETWORK=1
 ENV USER=root
 ENV PATH=$HADOOP_HOME/bin/:$PATH
@@ -16,10 +16,10 @@ RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /et
 
 RUN apt-get update && apt-get install -y --no-install-recommends perl curl netcat apt-utils && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -pv $HADOOP_TMP_DIR \
+RUN mkdir -pv $HADOOP_DOWNLOAD_DIR \
     && curl -fSL "$HADOOP_DOWNLOAD_URL" -o /tmp/hadoop.tar.gz \
-    && tar -xvf /tmp/hadoop.tar.gz -C $HADOOP_TMP_DIR --strip-components=1 \
-    && mv -v $HADOOP_TMP_DIR /opt \
+    && tar -xvf /tmp/hadoop.tar.gz -C $HADOOP_DOWNLOAD_DIR --strip-components=1 \
+    && mv -v $HADOOP_DOWNLOAD_DIR /opt \
     && rm -rfv /tmp/hadoop.tar.gz \
     && rm -rfv $HADOOP_HOME/share/doc \
     && cp -v $HADOOP_CONF_DIR/mapred-site.xml.template $HADOOP_CONF_DIR/mapred-site.xml
