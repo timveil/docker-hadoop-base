@@ -29,7 +29,7 @@ function configure() {
         echo " - Setting $name=$value"
         addProperty ${path} ${name} "$value"
 
-        #unset ${var}
+        unset ${var}
     done
 }
 
