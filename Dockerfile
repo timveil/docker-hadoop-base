@@ -2,13 +2,13 @@ FROM openjdk:8-jdk-slim
 
 LABEL maintainer="tjveil@gmail.com"
 
-ENV HADOOP_VERSION=2.8.4
 ENV HADOOP_HOME=/opt/hadoop
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 ENV MULTIHOMED_NETWORK=1
 ENV USER=root
 ENV PATH=$HADOOP_HOME/bin/:$PATH
 
+ARG HADOOP_VERSION=2.8.4
 ARG TIMEZONE=America/New_York
 ARG HADOOP_DOWNLOAD_URL=https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 ARG HADOOP_DOWNLOAD_DIR=/tmp/hadoop
