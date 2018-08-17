@@ -15,7 +15,7 @@ ARG HADOOP_DOWNLOAD_DIR=/tmp/hadoop
 
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone
 
-RUN apt-get update && apt-get install -y --no-install-recommends perl curl netcat apt-utils && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends perl curl netcat apt-utils less && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -pv $HADOOP_DOWNLOAD_DIR \
     && curl -fSL "$HADOOP_DOWNLOAD_URL" -o /tmp/hadoop.tar.gz \
