@@ -1,14 +1,18 @@
 #!/bin/bash
 
 function addProperty() {
-  local path=$1
-  local name=$2
-  local value=$3
+    local path=$1
+    local name=$2
+    local value=$3
 
-  local entry="<property><name>$name</name><value>${value}</value></property>"
-  local escapedEntry=$(echo ${entry} | sed 's/\//\\\//g')
+    if [ -f ${path} ]; then
+        local entry="<property><name>$name</name><value>${value}</value></property>"
+        local escapedEntry=$(echo ${entry} | sed 's/\//\\\//g')
 
-  sed -i "/<\/configuration>/ s/.*/${escapedEntry}\n&/" ${path}
+        sed -i "/<\/configuration>/ s/.*/${escapedEntry}\n&/" ${path}
+    else
+        echo "Unable to add property ${name}, The file '${path}' in not found."
+    fi
 }
 
 function configure() {
