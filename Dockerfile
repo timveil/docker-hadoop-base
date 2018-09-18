@@ -6,8 +6,8 @@ ARG TIMEZONE=America/New_York
 
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone
 
-RUN apt-get update
-    && apt-get install -y --no-install-recommends perl curl netcat apt-utils less procps
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends perl curl netcat apt-utils less procps \
     && rm -rf /var/lib/apt/lists/*
 
 ADD entrypoint.sh /entrypoint.sh
