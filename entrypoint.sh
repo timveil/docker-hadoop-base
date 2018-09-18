@@ -16,21 +16,27 @@ function configure() {
     local module=$2
     local envPrefix=$3
 
-    local var
-    local value
-    
-    echo "Configuring $module"
+    if [ -f ${path} ]; then
 
-    for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=${envPrefix}`; do
-        name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g'`
-        var="${envPrefix}_${c}"
-        value=${!var}
+        echo "Configuring $module"
 
-        echo " - Setting $name=$value"
-        addProperty ${path} ${name} "$value"
+        local var
+        local value
 
-        unset ${var}
-    done
+        for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=${envPrefix}`; do
+            name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g'`
+            var="${envPrefix}_${c}"
+            value=${!var}
+
+            echo " - Setting $name=$value"
+            addProperty ${path} ${name} "$value"
+
+            unset ${var}
+        done
+
+    else
+        echo "The file '${path}' in not found."
+    fi
 }
 
 configure ${HADOOP_CONF_DIR}/core-site.xml core CORE_CONF
@@ -41,26 +47,23 @@ configure ${HADOOP_CONF_DIR}/kms-site.xml kms KMS_CONF
 configure ${HADOOP_CONF_DIR}/mapred-site.xml mapred MAPRED_CONF
 configure ${HIVE_CONF_DIR}/hive-site.xml hive HIVE_SITE_CONF
 
-if [ "$MULTIHOMED_NETWORK" = "1" ]; then
-    echo "Configuring for multi-homed network"
+# HDFS
+addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.rpc-bind-host 0.0.0.0
+addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.servicerpc-bind-host 0.0.0.0
+addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.http-bind-host 0.0.0.0
+addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.https-bind-host 0.0.0.0
+addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.client.use.datanode.hostname true
+addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.datanode.use.datanode.hostname true
 
-    # HDFS
-    addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.rpc-bind-host 0.0.0.0
-    addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.servicerpc-bind-host 0.0.0.0
-    addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.http-bind-host 0.0.0.0
-    addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.https-bind-host 0.0.0.0
-    addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.client.use.datanode.hostname true
-    addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.datanode.use.datanode.hostname true
+# YARN
+addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.resourcemanager.bind-host 0.0.0.0
+addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.nodemanager.bind-host 0.0.0.0
+addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.nodemanager.bind-host 0.0.0.0
+addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.timeline-service.bind-host 0.0.0.0
 
-    # YARN
-    addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.resourcemanager.bind-host 0.0.0.0
-    addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.nodemanager.bind-host 0.0.0.0
-    addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.nodemanager.bind-host 0.0.0.0
-    addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.timeline-service.bind-host 0.0.0.0
+# MAPRED
+addProperty ${HADOOP_CONF_DIR}/mapred-site.xml yarn.nodemanager.bind-host 0.0.0.0
 
-    # MAPRED
-    addProperty ${HADOOP_CONF_DIR}/mapred-site.xml yarn.nodemanager.bind-host 0.0.0.0
-fi
 
 function waitForService() {
 
