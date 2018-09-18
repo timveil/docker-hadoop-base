@@ -11,7 +11,7 @@ function addProperty() {
 
         sed -i "/<\/configuration>/ s/.*/${escapedEntry}\n&/" ${path}
     else
-        echo "Unable to add property ${name}, The file '${path}' in not found."
+        echo "Unable to add property ${name}=${value}. The file '${path}' in not found."
     fi
 }
 
@@ -39,7 +39,7 @@ function configure() {
         done
 
     else
-        echo "The file '${path}' in not found."
+        echo "Unable to configure module ${module}. The file '${path}' in not found."
     fi
 }
 
@@ -51,21 +51,16 @@ configure ${HADOOP_CONF_DIR}/kms-site.xml kms KMS_CONF
 configure ${HADOOP_CONF_DIR}/mapred-site.xml mapred MAPRED_CONF
 configure ${HIVE_CONF_DIR}/hive-site.xml hive HIVE_SITE_CONF
 
-# HDFS
 addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.rpc-bind-host 0.0.0.0
 addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.servicerpc-bind-host 0.0.0.0
 addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.http-bind-host 0.0.0.0
 addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.https-bind-host 0.0.0.0
 addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.client.use.datanode.hostname true
 addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.datanode.use.datanode.hostname true
-
-# YARN
 addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.resourcemanager.bind-host 0.0.0.0
 addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.nodemanager.bind-host 0.0.0.0
 addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.nodemanager.bind-host 0.0.0.0
 addProperty ${HADOOP_CONF_DIR}/yarn-site.xml yarn.timeline-service.bind-host 0.0.0.0
-
-# MAPRED
 addProperty ${HADOOP_CONF_DIR}/mapred-site.xml yarn.nodemanager.bind-host 0.0.0.0
 
 
@@ -83,18 +78,18 @@ function waitForService() {
 
     until [ ${result} -eq 0 ]; do
 
-      echo "[$i/$max_try] ${service}:${port} is not available yet"
+        echo "[$i/$max_try] ${service}:${port} is not available yet"
 
-      if (( $i == $max_try )); then
-        echo "[$i/$max_try] ${service}:${port} is still not available; giving up after ${max_try} tries. :/"
-        exit 1
-      fi
+        if (( $i == $max_try )); then
+            echo "[$i/$max_try] ${service}:${port} is still not available; giving up after ${max_try} tries. :/"
+            exit 1
+        fi
 
-      let "i++"
-      sleep ${retrySeconds}
+        let "i++"
+        sleep ${retrySeconds}
 
-      nc -z ${service} ${port}
-      result=$?
+        nc -z ${service} ${port}
+        result=$?
     done
 
     echo "[$i/$max_try] $service:${port} is available."
