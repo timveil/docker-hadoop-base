@@ -5,7 +5,7 @@ function addProperty() {
     local name=$2
     local value=$3
 
-    if [ -f ${path} ]; then
+    if [[ -f ${path} ]]; then
         local entry="<property><name>$name</name><value>${value}</value></property>"
         local escapedEntry=$(echo ${entry} | sed 's/\//\\\//g')
 
@@ -20,7 +20,7 @@ function configure() {
     local module=$2
     local envPrefix=$3
 
-    if [ -f ${path} ]; then
+    if [[ -f ${path} ]]; then
 
         echo "Configuring $module"
 
@@ -76,7 +76,7 @@ function waitForService() {
     nc -z ${service} ${port}
     result=$?
 
-    until [ ${result} -eq 0 ]; do
+    until [[ ${result} -eq 0 ]]; do
 
         echo "[$i/$max_try] ${service}:${port} is not available yet"
 
