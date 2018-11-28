@@ -24,13 +24,10 @@ function configure() {
 
         echo "Configuring $module"
 
-        local var
-        local value
-
         for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=${envPrefix}`; do
-            name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g'`
-            var="${envPrefix}_${c}"
-            value=${!var}
+            local name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g'`
+            local var="${envPrefix}_${c}"
+            local value=${!var}
 
             echo " - Setting $name=$value"
             addProperty ${path} ${name} "$value"
