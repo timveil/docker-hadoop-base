@@ -35,6 +35,7 @@ function configure() {
             echo " - Setting $name=$value"
             addProperty ${path} ${name} "$value"
 
+            echo " - Un-setting ${var}"
             unset ${var}
         done
 
