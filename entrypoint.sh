@@ -10,6 +10,8 @@ function addProperty() {
         local escapedEntry=$(echo ${entry} | sed 's/\//\\\//g')
 
         sed -i "/<\/configuration>/ s/.*/${escapedEntry}\n&/" ${path}
+
+        echo "Added property ${name}=${value} to the file '${path}'."
     else
         echo "Unable to add property ${name}=${value}. The file '${path}' in not found."
     fi
