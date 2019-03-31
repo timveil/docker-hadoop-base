@@ -3,8 +3,8 @@
 `Dockerfile` responsible for installing and configuring the base Hadoop image.  This image is extended by a `docker-hadoop-core`.
 
 For example this image does the following:
-* update TimeZone
-* run `apt-get` update and install...
+* update image timezone to `America/New_York`
+* run `apt-get` update and install the following required components:
     * `curl`
     * `perl`
     * `netcat`
