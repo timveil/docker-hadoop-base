@@ -4,7 +4,7 @@
 
 For example this image does the following:
 * update image timezone to `America/New_York`
-* run `apt-get` update and install the following required components:
+* run `apt-get` update and install the following required packages:
     * `curl`
     * `perl`
     * `netcat`
