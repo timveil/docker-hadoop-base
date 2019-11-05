@@ -11,6 +11,7 @@ For example this image does the following:
     * `apt-utils`
     * `less`
     * `procps`
+    * `vim`
 * add `entrypoint.sh`
     
 
