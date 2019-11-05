@@ -51,6 +51,7 @@ configure ${HADOOP_CONF_DIR}/kms-site.xml kms KMS_CONF
 configure ${HADOOP_CONF_DIR}/mapred-site.xml mapred MAPRED_CONF
 configure ${HIVE_CONF_DIR}/hive-site.xml hive HIVE_SITE_CONF
 configure ${HIVE_CONF_DIR}/metastore-site.xml metastore METASTORE_SITE_CONF
+configure ${METASTORE_HOME}/conf/metastore-site.xml metastore METASTORE_STANDALONE_CONF
 
 #addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.rpc-bind-host 0.0.0.0
 #addProperty ${HADOOP_CONF_DIR}/hdfs-site.xml dfs.namenode.servicerpc-bind-host 0.0.0.0
